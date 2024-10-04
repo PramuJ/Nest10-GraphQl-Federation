@@ -5,6 +5,7 @@ import { CreateEmployeeInput } from './dto/create-employee.input';
 import { UpdateEmployeeInput } from './dto/update-employee.input';
 import { Project } from './entities/project.entity';
 import { Location } from './entities/location.entity';
+import { EmployeeDec } from 'src/utilities/Interceptors/employee.decorator';
 
 
 @Resolver(() => Employee)
@@ -17,10 +18,11 @@ export class EmployeeResolver {
   }
 
   @Query(() => [Employee], { name: 'getAllEmployees' })
-  findAll(@Context() context , @Info() info ) {
+  findAll(@Context() context , @Info() info, @EmployeeDec() emp : string ) {
+    console.log(emp)
     console.log("-------------------new fetch from employee--------------------")
     // console.log(context)
-    console.log(context.req?.headers)
+    //console.log(context.req?.headers)
     let query = context.req.body.query
     // console.log(query)
     

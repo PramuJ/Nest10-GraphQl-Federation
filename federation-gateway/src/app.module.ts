@@ -61,7 +61,8 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
 
         buildService({ url }) {
           
-          const allowedHeaders = ['custom-header'];
+          const allowedHeaders = ['custom-header']; // to allow selected headers 
+
           return new AuthenticatedDataSource({
             url,
             willSendRequest({ context, request }) {
@@ -88,6 +89,16 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
                     
                   }
                 }
+
+                const token = context.req.headers.authorization || ''; // Extract JWT token
+                request.http.headers.set('Authorization', token); // Forward JWT token
+
+
+
+
+
+
+
                 
               }
               // enable this later once all correlationIds are implemented

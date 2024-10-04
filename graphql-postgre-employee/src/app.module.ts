@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, Scope } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EmployeeModule } from './employee/employee.module';
@@ -8,6 +8,9 @@ import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Project } from './employee/entities/project.entity';
 import { Location } from './employee/entities/location.entity';
+import { AuthModule } from './auth/auth.module';
+import { CustomInterceptors } from './utilities/Interceptors/custom.interceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [EmployeeModule,
@@ -29,8 +32,14 @@ import { Location } from './employee/entities/location.entity';
       entities:["dist/**/*.entity{.ts,.js}"],
       synchronize:true,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, 
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CustomInterceptors,
+    }
+],
 })
 export class AppModule {}
